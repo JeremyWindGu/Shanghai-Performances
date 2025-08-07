@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Conversion Tool</title>
+    <style>
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            margin: 20px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+            color: #e0e0e0;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(40, 40, 40, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+        h1 {
+            color: #f5f5f5;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+        .section {
+            margin-bottom: 30px;
+            padding: 25px;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            background: rgba(60, 60, 60, 0.8);
+        }
+        .section h3 {
+            color: #e0e0e0;
+            margin-top: 0;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        .file-input {
+            margin: 10px 0;
+        }
+        .file-input input[type="file"] {
+            padding: 12px;
+            border: 2px dashed rgba(192, 160, 128, 0.5);
+            border-radius: 8px;
+            width: 100%;
+            box-sizing: border-box;
+            background: rgba(80, 80, 80, 0.8);
+            color: #e0e0e0;
+        }
+        .convert-btn {
+            background-color: rgba(160, 120, 80, 0.8);
+            color: #e0e0e0;
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 0;
+            font-family: 'Georgia', serif;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            transition: all 0.4s ease;
+        }
+        .convert-btn:hover {
+            background-color: rgba(180, 140, 100, 0.9);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .convert-btn:disabled {
+            background-color: rgba(120, 120, 120, 0.5);
+            cursor: not-allowed;
+        }
+        .preview {
+            margin-top: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 15px;
+            background-color: rgba(80, 80, 80, 0.8);
+            font-family: monospace;
+            font-size: 12px;
+            color: #e0e0e0;
+            border-radius: 8px;
+        }
+        .download-btn {
+            background-color: rgba(120, 140, 160, 0.8);
+            color: #e0e0e0;
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 5px;
+            font-family: 'Georgia', serif;
+            font-weight: 500;
+            transition: all 0.4s ease;
+        }
+        .download-btn:hover {
+            background-color: rgba(140, 160, 180, 0.9);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .status {
+            padding: 12px;
+            border-radius: 8px;
+            margin: 12px 0;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .status.success {
+            background-color: rgba(120, 160, 120, 0.8);
+            color: #e0e0e0;
+        }
+        .status.error {
+            background-color: rgba(160, 120, 120, 0.8);
+            color: #e0e0e0;
+        }
+        .status.info {
+            background-color: rgba(120, 140, 160, 0.8);
+            color: #e0e0e0;
+        }
+        .instructions {
+            background-color: rgba(160, 160, 120, 0.8);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #e0e0e0;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+        .language-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(52, 152, 219, 0.8);
+            color: #e0e0e0;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Georgia', serif;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .language-toggle:hover {
+            background: rgba(52, 152, 219, 0.9);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <button class="language-toggle" onclick="toggleLanguage()" data-en="中文" data-zh="English">中文</button>
+    
+    <div class="container">
+        <h1 data-en="Excel to CSV Data Conversion Tool" data-zh="Excel到CSV数据转换工具">Excel to CSV Data Conversion Tool</h1>
+        
+        <div class="instructions">
+            <h3 data-en="Instructions:" data-zh="使用说明：">Instructions:</h3>
+            <ol>
+                <li data-en="Select the Excel file to convert (.xlsx format)" data-zh="选择要转换的Excel文件（.xlsx格式）">Select the Excel file to convert (.xlsx format)</li>
+                <li data-en="Click 'Convert' button to convert Excel data to CSV format" data-zh="点击"Convert"按钮将Excel数据转换为CSV格式</li>
+                <li data-en="Preview the converted data" data-zh="预览转换后的数据">Preview the converted data</li>
+                <li data-en="Download CSV file and place it in the data folder" data-zh="下载CSV文件并放入data文件夹">Download CSV file and place it in the data folder</li>
+                <li data-en="Rename the file to the corresponding name (e.g., shanghai_performances.csv)" data-zh="重命名文件为对应的名称（如：shanghai_performances.csv）">Rename the file to the corresponding name (e.g., shanghai_performances.csv)</li>
+            </ol>
+        </div>
+
+        <div class="section">
+            <h3 data-en="Performance Venue Data Conversion" data-zh="表演场地数据转换">Performance Venue Data Conversion</h3>
+            <div class="file-input">
+                <input type="file" id="performances-file" accept=".xlsx,.xls" />
+            </div>
+            <button class="convert-btn" onclick="convertPerformances()" data-en="Convert Performance Venue Data" data-zh="转换表演场地数据">Convert Performance Venue Data</button>
+            <div id="performances-status"></div>
+            <div id="performances-preview" class="preview" style="display: none;"></div>
+            <div id="performances-download" style="display: none;">
+                <button class="download-btn" onclick="downloadCSV('performances')" data-en="Download shanghai_performances.csv" data-zh="下载 shanghai_performances.csv">Download shanghai_performances.csv</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3 data-en="Metro Station Data Conversion" data-zh="地铁站数据转换">Metro Station Data Conversion</h3>
+            <div class="file-input">
+                <input type="file" id="stations-file" accept=".xlsx,.xls" />
+            </div>
+            <button class="convert-btn" onclick="convertStations()" data-en="Convert Metro Station Data" data-zh="转换地铁站数据">Convert Metro Station Data</button>
+            <div id="stations-status"></div>
+            <div id="stations-preview" class="preview" style="display: none;"></div>
+            <div id="stations-download" style="display: none;">
+                <button class="download-btn" onclick="downloadCSV('stations')" data-en="Download shanghai_metro_stations.csv" data-zh="下载 shanghai_metro_stations.csv">Download shanghai_metro_stations.csv</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3 data-en="Flow Data Conversion" data-zh="流量数据转换">Flow Data Conversion</h3>
+            <div class="file-input">
+                <input type="file" id="flow-file" accept=".xlsx,.xls" />
+            </div>
+            <button class="convert-btn" onclick="convertFlow()" data-en="Convert Flow Data" data-zh="转换流量数据">Convert Flow Data</button>
+            <div id="flow-status"></div>
+            <div id="flow-preview" class="preview" style="display: none;"></div>
+            <div id="flow-download" style="display: none;">
+                <button class="download-btn" onclick="downloadCSV('flow')" data-en="Download event_flow_calculated.csv" data-zh="下载 event_flow_calculated.csv">Download event_flow_calculated.csv</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script>
+        let convertedData = {
+            performances: null,
+            stations: null,
+            flow: null
+        };
+        let currentLanguage = 'en';
+
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'en' ? 'zh' : 'en';
+            updatePageLanguage();
+        }
+
+        function updatePageLanguage() {
+            const elements = document.querySelectorAll('[data-en][data-zh]');
+            elements.forEach(element => {
+                const text = element.getAttribute(`data-${currentLanguage}`);
+                if (text) {
+                    element.textContent = text;
+                }
+            });
+            
+            document.documentElement.lang = currentLanguage === 'en' ? 'en' : 'zh-CN';
+        }
+
+        function convertPerformances() {
+            const fileInput = document.getElementById('performances-file');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                showStatus('performances', currentLanguage === 'en' ? 'Please select a file' : '请选择文件', 'error');
+                return;
+            }
+
+            convertExcelToCSV(file, 'performances');
+        }
+
+        function convertStations() {
+            const fileInput = document.getElementById('stations-file');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                showStatus('stations', currentLanguage === 'en' ? 'Please select a file' : '请选择文件', 'error');
+                return;
+            }
+
+            convertExcelToCSV(file, 'stations');
+        }
+
+        function convertFlow() {
+            const fileInput = document.getElementById('flow-file');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                showStatus('flow', currentLanguage === 'en' ? 'Please select a file' : '请选择文件', 'error');
+                return;
+            }
+
+            convertExcelToCSV(file, 'flow');
+        }
+
+        function convertExcelToCSV(file, type) {
+            showStatus(type, currentLanguage === 'en' ? 'Converting data...' : '正在转换数据...', 'info');
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const sheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[sheetName];
+                    
+                    // 转换为CSV
+                    const csv = XLSX.utils.sheet_to_csv(worksheet);
+                    convertedData[type] = csv;
+                    
+                    // 显示预览
+                    showPreview(type, csv);
+                    showStatus(type, currentLanguage === 'en' ? 'Conversion successful!' : '转换成功！', 'success');
+                    showDownload(type);
+                } catch (error) {
+                    showStatus(type, (currentLanguage === 'en' ? 'Conversion failed: ' : '转换失败: ') + error.message, 'error');
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        }
+
+        function showStatus(type, message, statusType) {
+            const statusElement = document.getElementById(type + '-status');
+            statusElement.innerHTML = `<div class="status ${statusType}">${message}</div>`;
+        }
+
+        function showPreview(type, csv) {
+            const previewElement = document.getElementById(type + '-preview');
+            previewElement.innerHTML = '<h4>' + (currentLanguage === 'en' ? 'Data Preview (First 10 rows):' : '数据预览（前10行）：') + '</h4>' + 
+                csv.split('\n').slice(0, 10).join('\n');
+            previewElement.style.display = 'block';
+        }
+
+        function showDownload(type) {
+            const downloadElement = document.getElementById(type + '-download');
+            downloadElement.style.display = 'block';
+        }
+
+        function downloadCSV(type) {
+            if (!convertedData[type]) {
+                alert(currentLanguage === 'en' ? 'No data to download' : '没有可下载的数据');
+                return;
+            }
+
+            const blob = new Blob([convertedData[type]], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            
+            let filename = '';
+            switch(type) {
+                case 'performances':
+                    filename = 'shanghai_performances.csv';
+                    break;
+                case 'stations':
+                    filename = 'shanghai_metro_stations.csv';
+                    break;
+                case 'flow':
+                    filename = 'event_flow_calculated.csv';
+                    break;
+            }
+            
+            link.href = URL.createObjectURL(blob);
+            link.download = filename;
+            link.click();
+        }
+
+        // 文件拖放功能
+        document.querySelectorAll('input[type="file"]').forEach(input => {
+            input.addEventListener('change', function() {
+                const fileName = this.files[0]?.name || (currentLanguage === 'en' ? 'No file selected' : '未选择文件');
+                this.nextElementSibling.textContent = (currentLanguage === 'en' ? 'Selected: ' : '已选择: ') + fileName;
+            });
+        });
+    </script>
+</body>
+</html> 

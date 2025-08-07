@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shanghai Performance Venue Flow Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://unpkg.com/d3-geo@3"></script>
+    <script src="https://unpkg.com/topojson-client@3"></script>
+    <script src="data-loader.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1 data-en="Shanghai Performance Venue Flow Map" data-zh="上海表演场地流量地图">Shanghai Performance Venue Flow Map</h1>
+            <p data-en="Interactive visualization of crowd flow between metro stations and performance venues" data-zh="地铁站与表演场地之间客流量的交互式可视化">Interactive visualization of crowd flow between metro stations and performance venues</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <label for="performance-select" data-en="Select Performance" data-zh="选择表演">Select Performance</label>
+                <select id="performance-select">
+                    <option value="" data-en="Please select a performance" data-zh="请选择表演">Please select a performance</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <button id="play-btn" class="btn" data-en="Play" data-zh="播放">Play</button>
+                <button id="pause-btn" class="btn" data-en="Pause" data-zh="暂停">Pause</button>
+                <button id="reset-btn" class="btn" data-en="Reset" data-zh="重置">Reset</button>
+            </div>
+
+            <div class="control-group">
+                <div class="time-display">
+                    <span data-en="Current Time: " data-zh="当前时间：">Current Time: </span>
+                    <span id="current-time">00:00</span>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <button id="language-toggle" class="btn language-btn" data-en="中文" data-zh="English">中文</button>
+                <a href="start.html" class="btn start-btn" data-en="Developer Tools" data-zh="开发者工具">Developer Tools</a>
+            </div>
+        </div>
+
+        <div class="map-container">
+            <div id="map"></div>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color venue"></div>
+                <span data-en="Performance Venue" data-zh="表演场地">Performance Venue</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color station"></div>
+                <span data-en="Metro Station" data-zh="地铁站">Metro Station</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color entry"></div>
+                <span data-en="Entry Flow" data-zh="入场流量">Entry Flow</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color exit"></div>
+                <span data-en="Exit Flow" data-zh="出场流量">Exit Flow</span>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="data-loader.js"></script>
+    <script src="script.js"></script>
+</body>
+</html> 

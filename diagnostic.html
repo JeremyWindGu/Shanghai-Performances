@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Diagnostic Tools</title>
+    <style>
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            margin: 20px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+            color: #e0e0e0;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: rgba(40, 40, 40, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+        .section {
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 12px;
+            background: rgba(60, 60, 60, 0.8);
+        }
+        .result {
+            background-color: rgba(80, 80, 80, 0.8);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            color: #e0e0e0;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        button {
+            background: rgba(160, 120, 80, 0.8);
+            color: #e0e0e0;
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 8px;
+            font-family: 'Georgia', serif;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            transition: all 0.4s ease;
+        }
+        button:hover {
+            background: rgba(180, 140, 100, 0.9);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            border-color: rgba(255,255,255,0.3);
+        }
+        .status {
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .success { background-color: rgba(120, 160, 120, 0.8); color: #e0e0e0; }
+        .error { background-color: rgba(160, 120, 120, 0.8); color: #e0e0e0; }
+        .warning { background-color: rgba(160, 160, 120, 0.8); color: #e0e0e0; }
+        .info { background-color: rgba(120, 140, 160, 0.8); color: #e0e0e0; }
+        .progress {
+            width: 100%;
+            height: 20px;
+            background-color: rgba(80, 80, 80, 0.8);
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .progress-bar {
+            height: 100%;
+            background-color: #c0a080;
+            transition: width 0.3s ease;
+        }
+        .language-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(52, 152, 219, 0.8);
+            color: #e0e0e0;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Georgia', serif;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .language-toggle:hover {
+            background: rgba(52, 152, 219, 0.9);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <button class="language-toggle" onclick="toggleLanguage()" data-en="中文" data-zh="English">中文</button>
+    
+    <div class="container">
+        <h1 data-en="Application Diagnostic Tools" data-zh="应用诊断工具">Application Diagnostic Tools</h1>
+        <p data-en="This tool helps diagnose and resolve issues in the application." data-zh="这个工具可以帮助诊断和解决应用中的问题。">This tool helps diagnose and resolve issues in the application.</p>
+        
+        <div class="section">
+            <h3 data-en="Quick Diagnosis" data-zh="快速诊断">Quick Diagnosis</h3>
+            <p data-en="Click the button below to perform a comprehensive system diagnosis:" data-zh="点击下面的按钮进行全面的系统诊断：">Click the button below to perform a comprehensive system diagnosis:</p>
+            <button onclick="runFullDiagnostic()" data-en="Start Full Diagnosis" data-zh="开始全面诊断">Start Full Diagnosis</button>
+            <div id="full-diagnostic-result" class="result" data-en="Click 'Start Full Diagnosis' button to check all system components" data-zh="点击'开始全面诊断'按钮来检查所有系统组件">
+                Click 'Start Full Diagnosis' button to check all system components
+            </div>
+        </div>
+
+        <div class="section">
+            <h3 data-en="Data Validation" data-zh="数据验证">Data Validation</h3>
+            <p data-en="Validate CSV data file formats and content:" data-zh="验证CSV数据文件的格式和内容：">Validate CSV data file formats and content:</p>
+            <button onclick="validateDataFiles()" data-en="Validate Data Files" data-zh="验证数据文件">Validate Data Files</button>
+            <div id="data-validation-result" class="result" data-en="Click 'Validate Data Files' button to check data format" data-zh="点击'验证数据文件'按钮来检查数据格式">
+                Click 'Validate Data Files' button to check data format
+            </div>
+        </div>
+
+        <div class="section">
+            <h3 data-en="Animation Test" data-zh="动画测试">Animation Test</h3>
+            <p data-en="Test animation speed and time calculation:" data-zh="测试动画速度和时间计算：">Test animation speed and time calculation:</p>
+            <button onclick="testAnimationSpeed()" data-en="Test Animation Speed" data-zh="测试动画速度">Test Animation Speed</button>
+            <div id="animation-test-result" class="result" data-en="Click 'Test Animation Speed' button to verify animation control" data-zh="点击'测试动画速度'按钮来验证动画控制">
+                Click 'Test Animation Speed' button to verify animation control
+            </div>
+        </div>
+
+        <div class="section">
+            <h3 data-en="Map Projection Test" data-zh="地图投影测试">Map Projection Test</h3>
+            <p data-en="Test map projection and range settings:" data-zh="测试地图投影和范围设置：">Test map projection and range settings:</p>
+            <button onclick="testMapProjection()" data-en="Test Map Projection" data-zh="测试地图投影">Test Map Projection</button>
+            <div id="map-test-result" class="result" data-en="Click 'Test Map Projection' button to verify map settings" data-zh="点击'测试地图投影'按钮来验证地图设置">
+                Click 'Test Map Projection' button to verify map settings
+            </div>
+        </div>
+
+        <div class="section">
+            <h3 data-en="Troubleshooting" data-zh="问题排查">Troubleshooting</h3>
+            <p data-en="Common problem solutions:" data-zh="常见问题的解决方案：">Common problem solutions:</p>
+            <div id="troubleshooting" class="result">
+                <strong data-en="Common Issues:" data-zh="常见问题：">Common Issues:</strong>
+                
+                <div data-en="1. Animation speed too fast:
+   - Fixed: Limited single increment to 2 minutes
+   - 30 minutes map time = 1 second real time
+
+2. Map range too large:
+   - Fixed: Auto-center on venue, 2km radius
+   - Dynamic projection range adjustment
+
+3. Data loading failure:
+   - Check if CSV files exist
+   - Verify file format is correct
+
+4. Map base layer not displaying:
+   - Fixed: Simplified background, removed fixed boundaries
+   - Using dynamic grid background" data-zh="1. 动画速度过快：
+   - 已修复：限制单次增量为2分钟
+   - 30分钟地图时间 = 1秒现实时间
+
+2. 地图范围过大：
+   - 已修复：自动以场地为中心，2km半径
+   - 动态调整投影范围
+
+3. 数据加载失败：
+   - 检查CSV文件是否存在
+   - 验证文件格式是否正确
+
+4. 地图底图不显示：
+   - 已修复：简化背景，移除固定边界
+   - 使用动态网格背景">
+1. Animation speed too fast:
+   - Fixed: Limited single increment to 2 minutes
+   - 30 minutes map time = 1 second real time
+
+2. Map range too large:
+   - Fixed: Auto-center on venue, 2km radius
+   - Dynamic projection range adjustment
+
+3. Data loading failure:
+   - Check if CSV files exist
+   - Verify file format is correct
+
+4. Map base layer not displaying:
+   - Fixed: Simplified background, removed fixed boundaries
+   - Using dynamic grid background
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script>
+        let currentLanguage = 'en';
+
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'en' ? 'zh' : 'en';
+            updatePageLanguage();
+        }
+
+        function updatePageLanguage() {
+            const elements = document.querySelectorAll('[data-en][data-zh]');
+            elements.forEach(element => {
+                const text = element.getAttribute(`data-${currentLanguage}`);
+                if (text) {
+                    element.textContent = text;
+                }
+            });
+            
+            document.documentElement.lang = currentLanguage === 'en' ? 'en' : 'zh-CN';
+        }
+
+        async function runFullDiagnostic() {
+            const result = document.getElementById('full-diagnostic-result');
+            result.innerHTML = currentLanguage === 'en' ? '🔄 Running full diagnosis...\n' : '🔄 正在进行全面诊断...\n';
+            
+            let diagnostics = '';
+            
+            // 1. 检查浏览器支持
+            diagnostics += currentLanguage === 'en' ? '=== Browser Support Check ===\n' : '=== 浏览器支持检查 ===\n';
+            const hasFetch = typeof fetch !== 'undefined';
+            const hasD3 = typeof d3 !== 'undefined';
+            const hasConsole = typeof console !== 'undefined';
+            
+            diagnostics += `Fetch API: ${hasFetch ? '✅ Supported' : '❌ Not Supported'}\n`;
+            diagnostics += `D3.js: ${hasD3 ? '✅ Supported' : '❌ Not Supported'}\n`;
+            diagnostics += `Console: ${hasConsole ? '✅ Supported' : '❌ Not Supported'}\n\n`;
+            
+            // 2. 检查文件存在性
+            diagnostics += currentLanguage === 'en' ? '=== File Existence Check ===\n' : '=== 文件存在性检查 ===\n';
+            const files = [
+                'data/shanghai_performances.csv',
+                'data/shanghai_metro_stations.csv',
+                'data/event_flow_calculated.csv',
+                'index.html',
+                'script.js',
+                'styles.css',
+                'data-loader.js'
+            ];
+            
+            for (const file of files) {
+                try {
+                    const response = await fetch(file);
+                    diagnostics += `${file}: ${response.ok ? '✅ Exists' : '❌ Not Found'}\n`;
+                } catch (error) {
+                    diagnostics += `${file}: ❌ Error - ${error.message}\n`;
+                }
+            }
+            diagnostics += '\n';
+            
+            // 3. 检查数据格式
+            diagnostics += currentLanguage === 'en' ? '=== Data Format Check ===\n' : '=== 数据格式检查 ===\n';
+            try {
+                const perfResponse = await fetch('data/shanghai_performances.csv');
+                const perfText = await perfResponse.text();
+                const perfLines = perfText.split('\n');
+                const header = perfLines[0];
+                const dataLines = perfLines.slice(1).filter(line => line.trim());
+                
+                diagnostics += currentLanguage === 'en' ? 'Performance Venue Data:\n' : '表演场地数据:\n';
+                diagnostics += currentLanguage === 'en' ? `  Total Lines: ${perfLines.length}\n` : `  总行数: ${perfLines.length}\n`;
+                diagnostics += currentLanguage === 'en' ? `  Data Lines: ${dataLines.length}\n` : `  数据行数: ${dataLines.length}\n`;
+                diagnostics += currentLanguage === 'en' ? `  Header: ${header}\n` : `  标题: ${header}\n`;
+                
+                if (dataLines.length > 0) {
+                    const firstDataLine = dataLines[0];
+                    const columns = firstDataLine.split(',');
+                    diagnostics += currentLanguage === 'en' ? `  First Line Columns: ${columns.length}\n` : `  第一行列数: ${columns.length}\n`;
+                    diagnostics += currentLanguage === 'en' ? `  First Line: ${firstDataLine.substring(0, 100)}...\n` : `  第一行: ${firstDataLine.substring(0, 100)}...\n`;
+                }
+            } catch (error) {
+                diagnostics += currentLanguage === 'en' ? `Performance Venue Data: ❌ Read Failed - ${error.message}\n` : `表演场地数据: ❌ 读取失败 - ${error.message}\n`;
+            }
+            
+            result.innerHTML = diagnostics;
+        }
+
+        async function validateDataFiles() {
+            const result = document.getElementById('data-validation-result');
+            result.innerHTML = currentLanguage === 'en' ? '🔄 Validating data files...\n' : '🔄 正在验证数据文件...\n';
+            
+            let validation = '';
+            
+            // 验证表演场地数据
+            try {
+                const perfResponse = await fetch('data/shanghai_performances.csv');
+                const perfText = await perfResponse.text();
+                const lines = perfText.split('\n').filter(line => line.trim());
+                
+                validation += currentLanguage === 'en' ? '=== Performance Venue Data Validation ===\n' : '=== 表演场地数据验证 ===\n';
+                validation += currentLanguage === 'en' ? `Total Records: ${lines.length - 1}\n` : `总记录数: ${lines.length - 1}\n`;
+                
+                if (lines.length > 1) {
+                    const header = lines[0].split(',');
+                    const firstData = lines[1].split(',');
+                    
+                    validation += currentLanguage === 'en' ? `Header Columns: ${header.length}\n` : `标题列数: ${header.length}\n`;
+                    validation += currentLanguage === 'en' ? `Data Columns: ${firstData.length}\n` : `数据列数: ${firstData.length}\n`;
+                    
+                    // 检查关键列
+                    const requiredColumns = ['Performance', 'Venue Name', 'geometry'];
+                    for (const col of requiredColumns) {
+                        const index = header.findIndex(h => h.trim() === col);
+                        validation += `${col}: ${index >= 0 ? '✅ Exists' : '❌ Missing'} (Index: ${index})\n`;
+                    }
+                    
+                    // 检查几何数据格式
+                    const geometryIndex = header.findIndex(h => h.trim() === 'geometry');
+                    if (geometryIndex >= 0 && firstData[geometryIndex]) {
+                        const geometry = firstData[geometryIndex];
+                        const pointMatch = geometry.match(/POINT\s*\(([^)]+)\)/);
+                        if (pointMatch) {
+                            const coords = pointMatch[1].trim().split(/\s+/);
+                            if (coords.length >= 2) {
+                                validation += currentLanguage === 'en' ? `Geometry Format: ✅ Correct (${coords.length} coordinates)\n` : `几何格式: ✅ 正确 (${coords.length} 个坐标)\n`;
+                                validation += currentLanguage === 'en' ? `Coordinates: [${coords.join(', ')}]\n` : `坐标值: [${coords.join(', ')}]\n`;
+                            } else {
+                                validation += currentLanguage === 'en' ? `Geometry Format: ❌ Insufficient coordinates\n` : `几何格式: ❌ 坐标数量不足\n`;
+                            }
+                        } else {
+                            validation += currentLanguage === 'en' ? `Geometry Format: ❌ Format mismatch\n` : `几何格式: ❌ 格式不匹配\n`;
+                            validation += currentLanguage === 'en' ? `Original Data: "${geometry}"\n` : `原始数据: "${geometry}"\n`;
+                        }
+                    } else {
+                        validation += currentLanguage === 'en' ? `Geometry Format: ❌ Missing geometry column or data\n` : `几何格式: ❌ 缺少geometry列或数据\n`;
+                    }
+                }
+            } catch (error) {
+                validation += currentLanguage === 'en' ? `Performance Venue Data: ❌ Validation Failed - ${error.message}\n` : `表演场地数据: ❌ 验证失败 - ${error.message}\n`;
+            }
+            
+            result.innerHTML = validation;
+        }
+
+        function testAnimationSpeed() {
+            const result = document.getElementById('animation-test-result');
+            result.innerHTML = currentLanguage === 'en' ? '🔄 Testing animation speed...\n' : '🔄 正在测试动画速度...\n';
+            
+            let testResult = currentLanguage === 'en' ? '=== Animation Speed Test ===\n' : '=== 动画速度测试 ===\n';
+            
+            // 模拟动画计算
+            const testCases = [
+                { elapsed: 1000, expected: 5 },
+                { elapsed: 2000, expected: 10 },
+                { elapsed: 500, expected: 2.5 }
+            ];
+            
+            testCases.forEach((testCase, index) => {
+                const timeIncrement = (testCase.elapsed / 1000) * 5;
+                const maxIncrement = 1;
+                const actualIncrement = Math.min(timeIncrement, maxIncrement);
+                
+                testResult += currentLanguage === 'en' ? `Test ${index + 1}:\n` : `测试 ${index + 1}:\n`;
+                testResult += currentLanguage === 'en' ? `  Elapsed Time: ${testCase.elapsed}ms\n` : `  经过时间: ${testCase.elapsed}ms\n`;
+                testResult += currentLanguage === 'en' ? `  Expected Increment: ${testCase.expected} minutes\n` : `  期望增量: ${testCase.expected}分钟\n`;
+                testResult += currentLanguage === 'en' ? `  Calculated Increment: ${timeIncrement.toFixed(2)} minutes\n` : `  计算增量: ${timeIncrement.toFixed(2)}分钟\n`;
+                testResult += currentLanguage === 'en' ? `  Actual Increment: ${actualIncrement.toFixed(2)} minutes\n` : `  实际增量: ${actualIncrement.toFixed(2)}分钟\n`;
+                testResult += currentLanguage === 'en' ? `  Result: ${Math.abs(actualIncrement - testCase.expected) < 2 ? '✅ Pass' : '❌ Fail'}\n\n` : `  结果: ${Math.abs(actualIncrement - testCase.expected) < 2 ? '✅ 通过' : '❌ 失败'}\n\n`;
+            });
+            
+            result.innerHTML = testResult;
+        }
+
+        function testMapProjection() {
+            const result = document.getElementById('map-test-result');
+            result.innerHTML = currentLanguage === 'en' ? '🔄 Testing map projection...\n' : '🔄 正在测试地图投影...\n';
+            
+            let testResult = currentLanguage === 'en' ? '=== Map Projection Test ===\n' : '=== 地图投影测试 ===\n';
+            
+            // 测试不同的场地坐标
+            const testVenues = [
+                { name: 'Jasmine Theater', coords: [121.485, 31.23] },
+                { name: 'Shanghai Grand Theater', coords: [121.482, 31.231] },
+                { name: 'Shanghai Dramatic Arts Center', coords: [121.44, 31.22] },
+                { name: 'Oriental Art Center', coords: [121.51, 31.22] }
+            ];
+            
+            testVenues.forEach((venue, index) => {
+                const latRadius = 0.02;
+                const lonRadius = 0.025;
+                
+                const bounds = [
+                    [venue.coords[0] - lonRadius, venue.coords[1] - latRadius],
+                    [venue.coords[0] + lonRadius, venue.coords[1] + latRadius]
+                ];
+                
+                const rangeKm = Math.sqrt(
+                    Math.pow((bounds[1][0] - bounds[0][0]) * 96, 2) +
+                    Math.pow((bounds[1][1] - bounds[0][1]) * 111, 2)
+                );
+                
+                testResult += currentLanguage === 'en' ? `Venue ${index + 1}: ${venue.name}\n` : `场地 ${index + 1}: ${venue.name}\n`;
+                testResult += currentLanguage === 'en' ? `  Coordinates: [${venue.coords[0]}, ${venue.coords[1]}]\n` : `  坐标: [${venue.coords[0]}, ${venue.coords[1]}]\n`;
+                testResult += currentLanguage === 'en' ? `  Calculated Range: ${rangeKm.toFixed(1)}km\n` : `  计算范围: ${rangeKm.toFixed(1)}km\n`;
+                testResult += currentLanguage === 'en' ? `  Bounds: [${bounds[0][0].toFixed(4)}, ${bounds[0][1].toFixed(4)}] to [${bounds[1][0].toFixed(4)}, ${bounds[1][1].toFixed(4)}]\n` : `  边界: [${bounds[0][0].toFixed(4)}, ${bounds[0][1].toFixed(4)}] 到 [${bounds[1][0].toFixed(4)}, ${bounds[1][1].toFixed(4)}]\n`;
+                testResult += currentLanguage === 'en' ? `  Result: ${Math.abs(rangeKm - 6.5) < 1 ? '✅ Correct' : '❌ Error'}\n\n` : `  结果: ${Math.abs(rangeKm - 6.5) < 1 ? '✅ 正确' : '❌ 错误'}\n\n`;
+            });
+            
+            result.innerHTML = testResult;
+        }
+    </script>
+</body>
+</html> 

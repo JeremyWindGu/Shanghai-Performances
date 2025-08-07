@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shanghai Performance Venue Flow Map - Launch Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #e0e0e0;
+        }
+
+        .container {
+            background: rgba(40, 40, 40, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            padding: 40px;
+            max-width: 800px;
+            width: 90%;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(45deg, #c0a080, #d4a574);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1a1a1a;
+            font-size: 24px;
+            font-weight: bold;
+            border: 2px solid rgba(255,255,255,0.2);
+        }
+
+        h1 {
+            color: #f5f5f5;
+            margin-bottom: 15px;
+            font-size: 2.8em;
+            font-weight: 300;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            color: #c0c0c0;
+            margin-bottom: 40px;
+            font-size: 1.2em;
+            font-style: italic;
+        }
+
+        .language-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(52, 152, 219, 0.8);
+            color: #e0e0e0;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Georgia', serif;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .language-toggle:hover {
+            background: rgba(52, 152, 219, 0.9);
+            transform: translateY(-2px);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .feature {
+            background: rgba(60, 60, 60, 0.8);
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 4px solid #c0a080;
+            text-align: left;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .feature h3 {
+            color: #e0e0e0;
+            margin-bottom: 12px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .feature p {
+            color: #c0c0c0;
+            line-height: 1.6;
+            font-size: 0.95em;
+        }
+
+        .buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            text-decoration: none;
+            display: inline-block;
+            font-family: 'Georgia', serif;
+            letter-spacing: 0.5px;
+        }
+
+        .btn-primary {
+            background: rgba(160, 120, 80, 0.8);
+            color: #e0e0e0;
+        }
+
+        .btn-primary:hover {
+            background: rgba(180, 140, 100, 0.9);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+            border-color: rgba(255,255,255,0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(80, 80, 80, 0.8);
+            color: #e0e0e0;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(100, 100, 100, 0.9);
+            transform: translateY(-3px);
+            border-color: rgba(255,255,255,0.3);
+        }
+
+        .btn-success {
+            background: rgba(120, 160, 120, 0.8);
+            color: #e0e0e0;
+        }
+
+        .btn-success:hover {
+            background: rgba(140, 180, 140, 0.9);
+            transform: translateY(-3px);
+            border-color: rgba(255,255,255,0.3);
+        }
+
+        .btn-info {
+            background: rgba(120, 140, 160, 0.8);
+            color: #e0e0e0;
+        }
+
+        .btn-info:hover {
+            background: rgba(140, 160, 180, 0.9);
+            transform: translateY(-3px);
+            border-color: rgba(255,255,255,0.3);
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            color: #a0a0a0;
+            font-size: 14px;
+            font-style: italic;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+            
+            .buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="language-toggle" onclick="toggleLanguage()" data-en="中文" data-zh="English">中文</button>
+    
+    <div class="container">
+        <div class="logo">S</div>
+        <h1 data-en="Shanghai Performance Venue Flow Map" data-zh="上海表演场地流量地图">Shanghai Performance Venue Flow Map</h1>
+        <p class="subtitle" data-en="Dynamic visualization of flow relationships between performance venues and metro stations" data-zh="动态展示表演场地与地铁站之间的流量关系">Dynamic visualization of flow relationships between performance venues and metro stations</p>
+        
+        <div class="features">
+            <div class="feature">
+                <h3 data-en="Core Features" data-zh="核心功能">Core Features</h3>
+                <p data-en="Display performance venue locations, nearby metro stations, and dynamic flow animations to help analyze crowd distribution patterns." data-zh="展示表演场地位置、附近地铁站，以及动态流量动画，帮助分析人流分布模式。">Display performance venue locations, nearby metro stations, and dynamic flow animations to help analyze crowd distribution patterns.</p>
+            </div>
+            <div class="feature">
+                <h3 data-en="Data Visualization" data-zh="数据可视化">Data Visualization</h3>
+                <p data-en="Interactive map implementation using Leaflet.js with real-time flow display and animation controls." data-zh="使用Leaflet.js实现交互式地图，支持实时流量展示和动画控制。">Interactive map implementation using Leaflet.js with real-time flow display and animation controls.</p>
+            </div>
+            <div class="feature">
+                <h3 data-en="Dynamic Updates" data-zh="动态更新">Dynamic Updates</h3>
+                <p data-en="Dynamically display entry and exit flows based on time intervals, with line thickness representing flow magnitude." data-zh="根据时间间隔动态显示入场和出场流量，线条粗细表示流量大小。">Dynamically display entry and exit flows based on time intervals, with line thickness representing flow magnitude.</p>
+            </div>
+        </div>
+        
+        <div class="buttons">
+            <a href="index.html" class="btn btn-primary" data-en="Launch Main App" data-zh="启动主应用">Launch Main App</a>
+            <a href="debug.html" class="btn btn-info" data-en="Debug Tools" data-zh="调试工具">Debug Tools</a>
+            <a href="convert-data.html" class="btn btn-success" data-en="Data Conversion" data-zh="数据转换">Data Conversion</a>
+            <a href="diagnostic.html" class="btn btn-info" data-en="Diagnostic Tools" data-zh="诊断工具">Diagnostic Tools</a>
+        </div>
+        
+        <div class="footer">
+            <p data-en="Built with Leaflet.js | Responsive Design | Modern Browser Compatible" data-zh="基于 Leaflet.js 构建 | 支持响应式设计 | 兼容现代浏览器">Built with Leaflet.js | Responsive Design | Modern Browser Compatible</p>
+            <p data-en="Data Source: Shanghai Performance Venues and Metro Station Information" data-zh="数据来源：上海表演场地和地铁站信息">Data Source: Shanghai Performance Venues and Metro Station Information</p>
+        </div>
+    </div>
+
+    <script>
+        let currentLanguage = 'en';
+
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'en' ? 'zh' : 'en';
+            updatePageLanguage();
+        }
+
+        function updatePageLanguage() {
+            const elements = document.querySelectorAll('[data-en][data-zh]');
+            elements.forEach(element => {
+                const text = element.getAttribute(`data-${currentLanguage}`);
+                if (text) {
+                    element.textContent = text;
+                }
+            });
+            
+            document.documentElement.lang = currentLanguage === 'en' ? 'en' : 'zh-CN';
+        }
+
+        // 添加一些交互效果
+        document.querySelectorAll('.btn').forEach(btn => {
+            btn.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-2px)';
+            });
+            
+            btn.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        // 添加页面加载动画
+        window.addEventListener('load', function() {
+            document.querySelector('.container').style.opacity = '0';
+            document.querySelector('.container').style.transform = 'translateY(20px)';
+            
+            setTimeout(() => {
+                document.querySelector('.container').style.transition = 'all 0.6s ease';
+                document.querySelector('.container').style.opacity = '1';
+                document.querySelector('.container').style.transform = 'translateY(0)';
+            }, 100);
+        });
+    </script>
+</body>
+</html> 

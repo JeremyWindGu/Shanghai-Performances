@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Page - Shanghai Performance Venue Flow Map</title>
+    <style>
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            margin: 20px;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+            color: #e0e0e0;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(40, 40, 40, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+        }
+        .debug-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            background: rgba(60, 60, 60, 0.8);
+        }
+        .debug-section h3 {
+            margin-top: 0;
+            color: #e0e0e0;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        .status {
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .status.success {
+            background-color: rgba(120, 160, 120, 0.8);
+            color: #e0e0e0;
+        }
+        .status.error {
+            background-color: rgba(160, 120, 120, 0.8);
+            color: #e0e0e0;
+        }
+        .status.warning {
+            background-color: rgba(160, 160, 120, 0.8);
+            color: #e0e0e0;
+        }
+        .data-display {
+            background-color: rgba(80, 80, 80, 0.8);
+            padding: 15px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 200px;
+            overflow-y: auto;
+            color: #e0e0e0;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        button {
+            background: rgba(160, 120, 80, 0.8);
+            color: #e0e0e0;
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            margin: 8px;
+            font-family: 'Georgia', serif;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            transition: all 0.4s ease;
+        }
+        button:hover {
+            background: rgba(180, 140, 100, 0.9);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            border-color: rgba(255,255,255,0.3);
+        }
+        #map-container {
+            width: 100%;
+            height: 400px;
+            border: 1px solid rgba(255,255,255,0.1);
+            margin-top: 20px;
+            border-radius: 8px;
+            background: rgba(80, 80, 80, 0.8);
+        }
+        #map-svg {
+            width: 100%;
+            height: 100%;
+        }
+        .language-toggle {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(52, 152, 219, 0.8);
+            color: #e0e0e0;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Georgia', serif;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        .language-toggle:hover {
+            background: rgba(52, 152, 219, 0.9);
+            transform: translateY(-2px);
+        }
+    </style>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="data-loader.js"></script>
+</head>
+<body>
+    <button class="language-toggle" onclick="toggleLanguage()" data-en="中文" data-zh="English">中文</button>
+    
+    <div class="container">
+        <h1 data-en="Debug Page - Shanghai Performance Venue Flow Map" data-zh="调试页面 - 上海表演场地流量地图">Debug Page - Shanghai Performance Venue Flow Map</h1>
+        
+        <div class="debug-section">
+            <h3 data-en="Data Loading Test" data-zh="数据加载测试">Data Loading Test</h3>
+            <button onclick="testDataLoading()" data-en="Test Data Loading" data-zh="测试数据加载">Test Data Loading</button>
+            <button onclick="testMapRendering()" data-en="Test Map Rendering" data-zh="测试地图渲染">Test Map Rendering</button>
+            <button onclick="clearLog()" data-en="Clear Log" data-zh="清除日志">Clear Log</button>
+            <div id="log"></div>
+        </div>
+        
+        <div class="debug-section">
+            <h3 data-en="Data Status" data-zh="数据状态">Data Status</h3>
+            <div id="data-status"></div>
+        </div>
+        
+        <div class="debug-section">
+            <h3 data-en="Map Test" data-zh="地图测试">Map Test</h3>
+            <div id="map-container">
+                <svg id="map-svg"></svg>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let appData = null;
+        let currentLanguage = 'en';
+        const dataLoader = new DataLoader();
+        
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'en' ? 'zh' : 'en';
+            updatePageLanguage();
+        }
+
+        function updatePageLanguage() {
+            const elements = document.querySelectorAll('[data-en][data-zh]');
+            elements.forEach(element => {
+                const text = element.getAttribute(`data-${currentLanguage}`);
+                if (text) {
+                    element.textContent = text;
+                }
+            });
+            
+            document.documentElement.lang = currentLanguage === 'en' ? 'en' : 'zh-CN';
+        }
+        
+        function log(message, type = 'info') {
+            const logDiv = document.getElementById('log');
+            const timestamp = new Date().toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.className = `status ${type}`;
+            logEntry.innerHTML = `[${timestamp}] ${message}`;
+            logDiv.appendChild(logEntry);
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+        
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+        }
+        
+        async function testDataLoading() {
+            log(currentLanguage === 'en' ? 'Starting data loading test...' : '开始测试数据加载...', 'info');
+            
+            try {
+                appData = await dataLoader.loadAllData();
+                
+                if (appData) {
+                    log(currentLanguage === 'en' ? 'Data loading successful!' : '数据加载成功！', 'success');
+                    log(currentLanguage === 'en' ? `Performance Venue Data: ${appData.performances.length} records` : `表演场地数据: ${appData.performances.length} 条`, 'success');
+                    log(currentLanguage === 'en' ? `Metro Station Data: ${appData.stations.length} records` : `地铁站数据: ${appData.stations.length} 条`, 'success');
+                    log(currentLanguage === 'en' ? `Flow Data: ${appData.flowData.length} records` : `流量数据: ${appData.flowData.length} 条`, 'success');
+                    
+                    // 显示数据状态
+                    updateDataStatus();
+                    
+                    // 显示一些示例数据
+                    if (appData.performances.length > 0) {
+                        log(currentLanguage === 'en' ? `First Performance: ${appData.performances[0].name}` : `第一个表演: ${appData.performances[0].name}`, 'info');
+                    }
+                    if (appData.stations.length > 0) {
+                        log(currentLanguage === 'en' ? `First Station: ${appData.stations[0].name}` : `第一个车站: ${appData.stations[0].name}`, 'info');
+                    }
+                    if (appData.flowData.length > 0) {
+                        log(currentLanguage === 'en' ? `First Flow Record: ${appData.flowData[0].performance}` : `第一个流量记录: ${appData.flowData[0].performance}`, 'info');
+                    }
+                } else {
+                    log(currentLanguage === 'en' ? 'Data loading failed, using mock data' : '数据加载失败，使用模拟数据', 'warning');
+                    appData = {
+                        performances: dataLoader.getMockPerformances(),
+                        stations: dataLoader.getMockStations(),
+                        flowData: dataLoader.getMockFlowData()
+                    };
+                    updateDataStatus();
+                }
+            } catch (error) {
+                log(currentLanguage === 'en' ? `Data loading error: ${error.message}` : `数据加载错误: ${error.message}`, 'error');
+            }
+        }
+        
+        function updateDataStatus() {
+            const statusDiv = document.getElementById('data-status');
+            if (appData) {
+                statusDiv.innerHTML = `
+                    <div class="status success">
+                        <strong>${currentLanguage === 'en' ? 'Data Loading Status:' : '数据加载状态:'}</strong><br>
+                        ${currentLanguage === 'en' ? 'Performance Venues:' : '表演场地:'} ${appData.performances.length} ${currentLanguage === 'en' ? 'records' : '条'}<br>
+                        ${currentLanguage === 'en' ? 'Metro Stations:' : '地铁站:'} ${appData.stations.length} ${currentLanguage === 'en' ? 'records' : '条'}<br>
+                        ${currentLanguage === 'en' ? 'Flow Data:' : '流量数据:'} ${appData.flowData.length} ${currentLanguage === 'en' ? 'records' : '条'}
+                    </div>
+                    <div class="data-display">
+                        <strong>${currentLanguage === 'en' ? 'Performance Venue Examples:' : '表演场地示例:'}</strong><br>
+                        ${appData.performances.slice(0, 3).map(p => 
+                            `${p.name} - ${p.venue}`
+                        ).join('<br>')}
+                    </div>
+                `;
+            } else {
+                statusDiv.innerHTML = `<div class="status error">${currentLanguage === 'en' ? 'Data not loaded' : '数据未加载'}</div>`;
+            }
+        }
+        
+        function testMapRendering() {
+            if (!appData) {
+                log(currentLanguage === 'en' ? 'Please load data first' : '请先加载数据', 'error');
+                return;
+            }
+            
+            log(currentLanguage === 'en' ? 'Starting map rendering test...' : '开始测试地图渲染...', 'info');
+            
+            try {
+                // 设置SVG
+                const container = document.getElementById('map-container');
+                const width = container.clientWidth;
+                const height = container.clientHeight;
+                
+                const svg = d3.select('#map-svg')
+                    .attr('width', width)
+                    .attr('height', height);
+                
+                // 清空SVG
+                svg.selectAll('*').remove();
+                
+                // 设置投影
+                const projection = d3.geoMercator()
+                    .fitSize([width, height], {
+                        type: 'Feature',
+                        geometry: {
+                            type: 'Polygon',
+                            coordinates: [[
+                                [121.4, 31.1],
+                                [121.6, 31.1],
+                                [121.6, 31.3],
+                                [121.4, 31.3],
+                                [121.4, 31.1]
+                            ]]
+                        }
+                    });
+                
+                // 添加背景
+                svg.append('rect')
+                    .attr('x', 0)
+                    .attr('y', 0)
+                    .attr('width', width)
+                    .attr('height', height)
+                    .attr('fill', '#2d2d2d')
+                    .attr('stroke', '#e0e0e0')
+                    .attr('stroke-width', 1);
+                
+                // 绘制所有车站
+                appData.stations.forEach(station => {
+                    const point = projection([station.lon, station.lat]);
+                    if (point) {
+                        svg.append('circle')
+                            .attr('cx', point[0])
+                            .attr('cy', point[1])
+                            .attr('r', 4)
+                            .attr('fill', '#3498db')
+                            .attr('stroke', 'white')
+                            .attr('stroke-width', 1);
+                    }
+                });
+                
+                // 绘制所有表演场地
+                appData.performances.forEach(performance => {
+                    const coords = parseGeometry(performance.geometry);
+                    const point = projection(coords);
+                    if (point) {
+                        svg.append('circle')
+                            .attr('cx', point[0])
+                            .attr('cy', point[1])
+                            .attr('r', 6)
+                            .attr('fill', '#e67e22')
+                            .attr('stroke', 'white')
+                            .attr('stroke-width', 2);
+                    }
+                });
+                
+                log(currentLanguage === 'en' ? 'Map rendering completed' : '地图渲染完成', 'success');
+                
+            } catch (error) {
+                log(currentLanguage === 'en' ? `Map rendering error: ${error.message}` : `地图渲染错误: ${error.message}`, 'error');
+            }
+        }
+        
+        function parseGeometry(geometry) {
+            const match = geometry.match(/POINT\(([^)]+)\)/);
+            if (match) {
+                const coords = match[1].split(' ');
+                return [parseFloat(coords[0]), parseFloat(coords[1])];
+            }
+            return [121.4758, 31.2397]; // 默认坐标
+        }
+        
+        // 页面加载时自动测试数据加载
+        window.onload = function() {
+            log(currentLanguage === 'en' ? 'Debug page loaded' : '调试页面已加载', 'info');
+            testDataLoading();
+        };
+    </script>
+</body>
+</html> 

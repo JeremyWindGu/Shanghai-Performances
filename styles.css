@@ -1,0 +1,269 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Georgia', 'Times New Roman', serif;
+    background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+    min-height: 100vh;
+    color: #e0e0e0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #f5f5f5;
+}
+
+header h1 {
+    font-size: 2.8em;
+    margin-bottom: 15px;
+    text-shadow: 2px 2px 8px rgba(0,0,0,0.5);
+    font-weight: 300;
+    letter-spacing: 2px;
+}
+
+header p {
+    font-size: 1.2em;
+    opacity: 0.8;
+    font-style: italic;
+}
+
+.controls {
+    background: rgba(40, 40, 40, 0.9);
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    margin-bottom: 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+}
+
+.control-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.control-group label {
+    font-weight: 500;
+    color: #d0d0d0;
+    font-size: 0.95em;
+    letter-spacing: 0.5px;
+}
+
+#performance-select {
+    padding: 10px 15px;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 8px;
+    font-size: 14px;
+    min-width: 200px;
+    background: rgba(60, 60, 60, 0.8);
+    color: #e0e0e0;
+    font-family: 'Georgia', serif;
+}
+
+#performance-select:focus {
+    outline: none;
+    border-color: #c0a080;
+    box-shadow: 0 0 10px rgba(192, 160, 128, 0.3);
+}
+
+.btn {
+    padding: 12px 24px;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.4s ease;
+    background: rgba(80, 80, 80, 0.8);
+    color: #e0e0e0;
+    font-family: 'Georgia', serif;
+    letter-spacing: 0.5px;
+}
+
+.btn:hover {
+    background: rgba(120, 120, 120, 0.9);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+    border-color: rgba(255,255,255,0.3);
+}
+
+.btn:active {
+    transform: translateY(-1px);
+}
+
+.start-btn {
+    background: rgba(160, 120, 80, 0.8);
+    text-decoration: none;
+    display: inline-block;
+}
+
+.start-btn:hover {
+    background: rgba(180, 140, 100, 0.9);
+}
+
+.language-btn {
+    background: rgba(52, 152, 219, 0.8);
+    min-width: 60px;
+}
+
+.language-btn:hover {
+    background: rgba(52, 152, 219, 0.9);
+}
+
+.time-display {
+    font-size: 18px;
+    font-weight: 500;
+    color: #c0a080;
+    background: rgba(60, 60, 60, 0.8);
+    padding: 10px 18px;
+    border-radius: 8px;
+    border: 1px solid rgba(192, 160, 128, 0.3);
+    font-family: 'Georgia', serif;
+    letter-spacing: 1px;
+}
+
+.map-container {
+    background: rgba(40, 40, 40, 0.9);
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    overflow: hidden;
+    margin-bottom: 25px;
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+}
+
+#map {
+    width: 100%;
+    height: 600px;
+    border-radius: 10px;
+}
+
+.legend {
+    background: rgba(40, 40, 40, 0.9);
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    display: flex;
+    justify-content: center;
+    gap: 35px;
+    flex-wrap: wrap;
+    border: 1px solid rgba(255,255,255,0.1);
+    backdrop-filter: blur(10px);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #d0d0d0;
+    font-family: 'Georgia', serif;
+    letter-spacing: 0.5px;
+}
+
+.legend-color {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.3);
+    box-shadow: 0 3px 8px rgba(0,0,0,0.4);
+}
+
+.legend-color.venue {
+    background: #e67e22;
+}
+
+.legend-color.station {
+    background: #3498db;
+}
+
+.legend-color.entry {
+    background: #27ae60;
+}
+
+.legend-color.exit {
+    background: #e74c3c;
+}
+
+/* Leaflet地图样式覆盖 */
+.leaflet-popup-content-wrapper {
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    background: rgba(40, 40, 40, 0.95);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.leaflet-popup-content {
+    margin: 15px 20px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #e0e0e0;
+    font-family: 'Georgia', serif;
+}
+
+.leaflet-popup-tip {
+    background: rgba(40, 40, 40, 0.95);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+    
+    header h1 {
+        font-size: 2em;
+    }
+    
+    .controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .control-group {
+        justify-content: center;
+    }
+    
+    #map {
+        height: 400px;
+    }
+    
+    .legend {
+        gap: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 1.5em;
+    }
+    
+    .controls {
+        padding: 15px;
+    }
+    
+    #performance-select {
+        min-width: 150px;
+    }
+    
+    #map {
+        height: 300px;
+    }
+} 
